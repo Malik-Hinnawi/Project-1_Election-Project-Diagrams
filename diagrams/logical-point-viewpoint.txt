@@ -10,13 +10,14 @@ interface Announcement{
     +announce()
 }
 
+interface IVotingSystem
+class VotingSystem implements IVotingSystem
+
+interface IApprovalSystem
+class ApprovalSystem implements IApprovalSystem
 
 interface Document {
     +getContent()
-}
-
-interface User {
-    + getCredentials()  
 }
 
 abstract class Head implements User {
@@ -24,39 +25,28 @@ abstract class Head implements User {
     +informStudent()
 }
 
+'USERS
+interface User {
+    + getCredentials()  
+}
 interface Admin extends User 
-
-class DeansOffice extends Admin
-
-class DepartmentHead extends Head
-
-class FacultyHead extends Head
-
 interface Candidate 
-
 interface Representative extends Voter 
-
 interface Voter extends User {
     + sendVote(Candidate)
 }
+class DeansOffice extends Admin
+class DepartmentHead extends Head
+class FacultyHead extends Head
 
+
+' ANNOUNCEMENT
 class WinnerAnnouncement implements Announcement 
-
 class RuleAnnouncement implements Announcement
 
+' DOCUMENT
 class RulesDocument implements Document 
-
 class CandidateDocument implements Document
-
-class VotingSystem
-
-class ApprovalSystem
-
-class FacultyRepresentative implements Representative
-
-class DepartmentRepresentative implements Representative
-
-class Student implements Voter
 
 
 @enduml
