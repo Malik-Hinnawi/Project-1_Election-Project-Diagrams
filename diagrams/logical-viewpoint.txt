@@ -1,0 +1,52 @@
+@startuml
+interface Database {
+    +getVotingPeriod(VotingPeriodId): VotingPeriod
+    +addVote(VotingPeriodId)
+    +getCandidateDocuments(VotingPeriodId): Document[]
+    +getCandidates(VotingPeriodId)
+}
+
+interface Announcement{
+    +announce()
+}
+
+interface IVotingSystem
+class VotingSystem implements IVotingSystem
+
+interface IApprovalSystem
+class ApprovalSystem implements IApprovalSystem
+
+interface Document {
+    +getContent()
+}
+
+abstract class Head implements User {
+    +rejectElectionResults()
+    +informStudent()
+}
+
+'USERS
+interface User {
+    + getCredentials()  
+}
+interface Admin extends User 
+interface Candidate 
+interface Representative extends Voter 
+interface Voter extends User {
+    + sendVote(Candidate)
+}
+class DeansOffice extends Admin
+class DepartmentHead extends Head
+class FacultyHead extends Head
+
+
+' ANNOUNCEMENT
+class WinnerAnnouncement implements Announcement 
+class RuleAnnouncement implements Announcement
+
+' DOCUMENT
+class RulesDocument implements Document 
+class CandidateDocument implements Document
+
+
+@enduml
