@@ -1,20 +1,33 @@
 @startuml
+
+interface Authentication {
+    +login()
+    +logout()
+}
+
 interface Database {
-    +getVotingPeriod(VotingPeriodId): VotingPeriod
-    +addVote(VotingPeriodId)
-    +getCandidateDocuments(VotingPeriodId): Document[]
-    +getCandidates(VotingPeriodId)
+    +getElection(ElectionId): Election
+    +addVote(ElectionId)
+    +getCandidateDocuments(ElectionId): Document[]
+    +getCandidates(ElectionId)
 }
 
 interface Announcement{
-    +announce()
+    '+announce()
 }
 
-interface IVotingSystem
-class VotingSystem implements IVotingSystem
+interface ElectionController {
+    + startElection()
+    + endElection()
+    + calculateWinner()
+}
 
-interface IApprovalSystem
-class ApprovalSystem implements IApprovalSystem
+interface AnnouncementController
+
+interface DocumentController {
+    +sendDocument(Head)
+}
+
 
 interface Document {
     +getContent()
@@ -25,28 +38,70 @@ abstract class Head implements User {
     +informStudent()
 }
 
-'USERS
 interface User {
-    + getCredentials()  
 }
+
 interface Admin extends User 
-interface Candidate 
-interface Representative extends Voter 
+
+interface Student extends Voter {
+    +isCandidate(): boolean
+    +canBeCandidate(): boolean
+}
+
+
+interface Representative extends Student
+
+class FacultyRepresentative implements Representative
+
+class DepartmentRepresentative implements Representative {
+    +applyForFacultyElection(): boolean
+}
+
 interface Voter extends User {
     + sendVote(Candidate)
 }
-class DeansOffice extends Admin
+
+class DeansOffice implements Admin {
+    + announceResult(ElectionId)
+    + announceRules()
+}
+
 class DepartmentHead extends Head
+
 class FacultyHead extends Head
 
-
-' ANNOUNCEMENT
 class WinnerAnnouncement implements Announcement 
+
 class RuleAnnouncement implements Announcement
 
-' DOCUMENT
 class RulesDocument implements Document 
+
 class CandidateDocument implements Document
 
+abstract class Election {
+    - winner: Student
+    - candidates: Student[]
+}
 
+class ElectionId {
+    -start: Date
+    -end: Date
+}
+
+enum ElectionType{
+    FacultyRepresentative
+    DepartmentRepresentative
+}
+
+' Relations
+Election -right-> ElectionId
+ElectionId -down-> ElectionType
+Election -- ElectionController
+Student -right-o Election
+ElectionController -- AnnouncementController
+AnnouncementController -- Announcement
+DocumentController -- Document
+Database -- DocumentController
+ElectionController -- Database 
+User -left- Authentication
 @enduml
