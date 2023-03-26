@@ -3,6 +3,7 @@
 interface Authentication {
     +login()
     +logout()
+    +isIZTECHMember(): boolean
 }
 
 interface Database {
@@ -10,6 +11,7 @@ interface Database {
     +addVote(ElectionId)
     +getCandidateDocuments(ElectionId): Document[]
     +getCandidates(ElectionId)
+    +getFacultiesInAlphabeticalOrder(): String[]
 }
 
 interface Announcement{
@@ -79,6 +81,7 @@ class RulesDocument implements Document
 class CandidateDocument implements Document
 
 abstract class Election {
+    - id: ElectionId
     - winner: Student
     - candidates: Student[]
 }
@@ -86,6 +89,7 @@ abstract class Election {
 class ElectionId {
     -start: Date
     -end: Date
+    -type: ElectionType
 }
 
 enum ElectionType{
@@ -94,8 +98,8 @@ enum ElectionType{
 }
 
 ' Relations
-Election -right-> ElectionId
-ElectionId -down-> ElectionType
+Election -right-o ElectionId
+ElectionId -down-o ElectionType
 Election -- ElectionController
 Student -right-o Election
 ElectionController -- AnnouncementController
