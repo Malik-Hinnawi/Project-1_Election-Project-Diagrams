@@ -35,9 +35,15 @@ interface Document {
     +getContent()
 }
 
-abstract class Head implements User {
+class Head implements User {
+    -type: HeadType
     +rejectElectionResults()
     +informStudent()
+}
+
+enum HeadType {
+    FacultyHead
+    DepartmentHead
 }
 
 interface User {
@@ -68,9 +74,7 @@ class DeansOffice implements Admin {
     + announceRules()
 }
 
-class DepartmentHead extends Head
 
-class FacultyHead extends Head
 
 class WinnerAnnouncement implements Announcement 
 
@@ -86,26 +90,26 @@ abstract class Election {
     - candidates: Student[]
 }
 
+class FacultyRElection extends Election 
+
+class DepartmentRElection extends Election 
+
 class ElectionId {
     -start: Date
     -end: Date
-    -type: ElectionType
 }
 
-enum ElectionType{
-    FacultyRepresentative
-    DepartmentRepresentative
-}
+
 
 ' Relations
-Election -right-o ElectionId
-ElectionId -down-o ElectionType
+Election -right-> "1" ElectionId
 Election -- ElectionController
-Student -right-o Election
+Student "1..*"-right-o Election
 ElectionController -- AnnouncementController
 AnnouncementController -- Announcement
 DocumentController -- Document
 Database -- DocumentController
 ElectionController -- Database 
 User -left- Authentication
+Head -down-> "1" HeadType
 @enduml
