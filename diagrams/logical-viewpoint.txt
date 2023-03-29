@@ -52,7 +52,7 @@ interface Admin extends User
 interface Student extends Voter {
     +isCandidate(): boolean
     +canBeCandidate(): boolean
-    +applyForDepratmentELection(Document): boolean
+    +applyForDepratmentELection(Document[]): boolean
 }
 
 
