@@ -1,0 +1,12 @@
+title Announce Department Representative Results
+
+actor System
+participant AnnouncementController
+participant Database
+
+
+autoactivation on
+System->AnnouncementController: showElectionResults()
+AnnouncementController->Database: getElectionResults()
+AnnouncementController<--Database: results
+AnnouncementController->DisplayController:displayAnnounce()
