@@ -15,7 +15,7 @@ interface Database {
 }
 
 interface Announcement{
-    '+announce()
+
 }
 
 interface ElectionController {
@@ -23,8 +23,12 @@ interface ElectionController {
     + endElection()
     + calculateWinner()
 }
-
-interface AnnouncementController
+interface DisplayController {
+	+ display*()
+}
+interface AnnouncementController {
+	+ announce(User)
+}
 
 interface DocumentController {
     +sendDocument(Head)
@@ -35,15 +39,9 @@ interface Document {
     +getContent()
 }
 
-class Head implements User {
-    -type: HeadType
+abstract class Head implements User {
     +rejectElectionResults()
     +informStudent()
-}
-
-enum HeadType {
-    FacultyHead
-    DepartmentHead
 }
 
 interface User {
@@ -74,7 +72,9 @@ class DeansOffice implements Admin {
     + announceRules()
 }
 
+class DepartmentHead extends Head
 
+class FacultyHead extends Head
 
 class WinnerAnnouncement implements Announcement 
 
@@ -90,26 +90,31 @@ abstract class Election {
     - candidates: Student[]
 }
 
-class FacultyRElection extends Election 
-
-class DepartmentRElection extends Election 
-
 class ElectionId {
     -start: Date
     -end: Date
+    -type: ElectionType
 }
 
-
+enum ElectionType{
+    FacultyRepresentative
+    DepartmentRepresentative
+}
 
 ' Relations
-Election -right-> "1" ElectionId
+Election "1" -right-> "1" ElectionId
+ElectionId "1" -down-> "1" ElectionType
 Election -- ElectionController
-Student "1..*"-right-o Election
-ElectionController -- AnnouncementController
-AnnouncementController -- Announcement
+Student"1..*" -right-o Election
+
+AnnouncementController -down- Announcement
 DocumentController -- Document
 Database -- DocumentController
 ElectionController -- Database 
 User -left- Authentication
-Head -down-> "1" HeadType
+DisplayController -up- Database
+AnnouncementController -up- Database
+DisplayController -left- AnnouncementController
+DisplayController -right- DocumentController
+
 @enduml
