@@ -1,0 +1,22 @@
+title Vote For Department Representative
+
+actor Student
+participant VoteScreen
+participant ElectionController
+participant Database
+participant DisplayController
+
+autoactivation on
+Student->VoteScreen: castVote()
+VoteScreen->ElectionController: sendVote()
+ElectionController->Database: addVote()
+ElectionController<--Database: status
+autoactivation off
+alt status == succesful
+ElectionController->DisplayController: displayVoteSuccesful()
+activate DisplayController
+else Else
+ElectionController->DisplayController: displayVoteFail()
+end
+VoteScreen<--DisplayController: display
+deactivate DisplayController
