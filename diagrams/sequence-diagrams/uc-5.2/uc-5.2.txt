@@ -1,0 +1,38 @@
+title Approve Faculty Representative Results
+
+actor FacultyHead
+participant ResultScreen
+participant ElectionController
+participant Database
+participant DisplayController
+participant AnnouncementController
+actor DeanOffice
+autoactivation on
+FacultyHead->ResultScreen: showElectionResults()
+ResultScreen->ElectionController: getElectionResults()
+ElectionController->Database: getElectionResults()
+ElectionController<--Database: results
+ElectionController->DisplayController:displayResults()
+DisplayController-->ResultScreen: display
+autoactivation off
+alt approve
+FacultyHead->ResultScreen : approveElectionResults()
+ResultScreen->ElectionController: sendElectionResultsToDeanOffice()
+ElectionController->DisplayController: showApprovedCandidates()
+activate DisplayController
+DisplayController--> ResultScreen: display
+deactivate DisplayController
+DeanOffice->ResultScreen:approveElectionResults()
+activate DeanOffice
+deactivateafter DeanOffice
+ResultScreen->ElectionController: saveApprovedElectionResults()
+ElectionController->Database: saveApprovedElectionResults()
+activate Database
+ResultScreen->rejectElectionResults()
+else reject
+FacultyHead->ResultScreen : rejectElectionResults()
+ResultScreen->ElectionController : rejectElectionResults()
+ElectionController->Database: saveRejectedElectionResults()
+ElectionController->AnnouncementController: announceRejectedElectionResults()
+activate AnnouncementController
+end
