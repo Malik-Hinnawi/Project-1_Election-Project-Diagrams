@@ -4,14 +4,20 @@ interface Authentication {
     +login()
     +logout()
     +isIZTECHMember(): boolean
+    +showMainPage()
+    +displayError(String)
 }
 
 interface Database {
-    +getElection(ElectionId): Election
     +addVote(ElectionId)
+    +addFacultyCandidate(Representative)
+    +addDepartmentCandidate(Student)
+    +addTempDepartmentCandidate(Student)
+    +getElection(ElectionId): Election
     +getCandidateDocuments(ElectionId): Document[]
     +getCandidates(ElectionId)
     +getFacultiesInAlphabeticalOrder(): String[]
+    
 }
 
 interface Announcement{
@@ -55,6 +61,13 @@ interface Student extends Voter {
     +applyForDepratmentELection(Document[]): boolean
 }
 
+interface ApplicantUI {
+	+checkStudent(Document[]): boolean
+	+apply(Document[], String)
+	+checkReperentative(Document[]): boolean
+	+apply(Document[])
+}
+
 
 interface Representative extends Student
 
@@ -67,19 +80,26 @@ class DepartmentRepresentative implements Representative {
 interface Voter extends User {
     + sendVote(Candidate)
 }
-
-class DeansOffice implements Admin {
+ interface DeanUI extends Admin {
+    + setElectionTime(Date,ElectionId)
     + announceResult(ElectionId)
     + announceRules()
-}
+ }
+
+class DeansOffice implements DeanUI 
 
 class DepartmentHead extends Head
 
 class FacultyHead extends Head
 
-class WinnerAnnouncement implements Announcement 
+class WinnerAnnouncement implements Announcement {
+	+announceHeadOfStudentCouncil()
+}
 
-class RuleAnnouncement implements Announcement
+class RuleAnnouncement implements Announcement {
+	+ setRules(RulesDocument)
+	+ announceRules()
+}
 
 class RulesDocument implements Document 
 
@@ -91,22 +111,24 @@ abstract class Election {
     - candidates: Student[]
 }
 
+class FacultyRElection extends Election
+
+class DepartmentRElection extends Election
+
 class ElectionId {
     -start: Date
     -end: Date
-    -type: ElectionType
+    +setStartDate(Date)
+    +announceRules()
 }
 
-enum ElectionType{
-    FacultyRepresentative
-    DepartmentRepresentative
-}
+
 
 ' Relations
 Election "1" -right-> "1" ElectionId
-ElectionId "1" -down-> "1" ElectionType
 Election -- ElectionController
 Student"1..*" -right-o Election
+RuleAnnouncement -right- RulesDocument
 
 AnnouncementController -down- Announcement
 DocumentController -- Document
@@ -117,5 +139,7 @@ DisplayController -up- Database
 AnnouncementController -up- Database
 DisplayController -left- AnnouncementController
 DisplayController -right- DocumentController
+ApplicantUI -left-Database
+ApplicantUI -- Document
 
 @enduml
