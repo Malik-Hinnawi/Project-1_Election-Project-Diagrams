@@ -13,6 +13,7 @@ interface Database {
     +addFacultyCandidate(Representative)
     +addDepartmentCandidate(Student)
     +addTempDepartmentCandidate(Student)
+    +addRules(Document)
     +getElection(ElectionId): Election
     +getCandidateDocuments(ElectionId): Document[]
     +getCandidates(ElectionId)
