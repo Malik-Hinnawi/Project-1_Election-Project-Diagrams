@@ -7,11 +7,13 @@ interface Authentication {
 }
 
 interface Database {
-    +getElection(ElectionId): Election
     +addVote(ElectionId)
+    +addCandidate(Student)
+    +getElection(ElectionId): Election
     +getCandidateDocuments(ElectionId): Document[]
     +getCandidates(ElectionId)
     +getFacultiesInAlphabeticalOrder(): String[]
+    
 }
 
 interface Announcement{
@@ -55,6 +57,11 @@ interface Student extends Voter {
     +applyForDepratmentELection(Document[]): boolean
 }
 
+interface ApplicantUI {
+	+checkStudent(Student): boolean
+	+apply(Document[], String)
+}
+
 
 interface Representative extends Student
 
@@ -67,8 +74,9 @@ class DepartmentRepresentative implements Representative {
 interface Voter extends User {
     + sendVote(Candidate)
 }
+ interface DeanUI extends Admin 
 
-class DeansOffice implements Admin {
+class DeansOffice implements DeanUI {
     + announceResult(ElectionId)
     + announceRules()
 }
@@ -91,20 +99,19 @@ abstract class Election {
     - candidates: Student[]
 }
 
+class FacultyRElection extends Election
+
+class DepartmentRElection extends Election
+
 class ElectionId {
     -start: Date
     -end: Date
-    -type: ElectionType
 }
 
-enum ElectionType{
-    FacultyRepresentative
-    DepartmentRepresentative
-}
+
 
 ' Relations
 Election "1" -right-> "1" ElectionId
-ElectionId "1" -down-> "1" ElectionType
 Election -- ElectionController
 Student"1..*" -right-o Election
 
@@ -117,5 +124,5 @@ DisplayController -up- Database
 AnnouncementController -up- Database
 DisplayController -left- AnnouncementController
 DisplayController -right- DocumentController
-
+ApplicantUI -left- Database
 @enduml
