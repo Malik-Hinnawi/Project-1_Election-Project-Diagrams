@@ -7,6 +7,7 @@ participant Database
 
 autoactivation on
 System->AnnouncementController: showElectionResults()
-AnnouncementController->Database: getElectionResults()
+AnnouncementController->Database: getElection(ElectionId)
+Database->Database: getWinner()
 AnnouncementController<--Database: results
-AnnouncementController->DisplayController:displayAnnounce()
+AnnouncementController->DisplayController:displayAnnouncement()
