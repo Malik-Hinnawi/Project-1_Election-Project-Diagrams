@@ -8,7 +8,7 @@ participant DisplayController
 participant AnnouncementController
 actor DeanOffice
 autoactivation on
-DepartmentHead->ResultScreen: showElectionResults()
+DepartmentHead->ResultScreen: clicks to button get election results
 ResultScreen->ElectionController: getElectionResults()
 ElectionController->Database: getElectionResults()
 ElectionController<--Database: results
@@ -16,13 +16,13 @@ ElectionController->DisplayController:displayResults()
 DisplayController-->ResultScreen: display
 autoactivation off
 alt approve
-DepartmentHead->ResultScreen : approveElectionResults()
+DepartmentHead->ResultScreen : approves election results
 ResultScreen->ElectionController: sendElectionResultsToDeanOffice()
 ElectionController->DisplayController: showApprovedCandidates()
 activate DisplayController
 DisplayController--> ResultScreen: display
 deactivate DisplayController
-DeanOffice->ResultScreen:approveElectionResults()
+DeanOffice->ResultScreen:approves election results
 activate DeanOffice
 deactivateafter DeanOffice
 ResultScreen->ElectionController: saveApprovedElectionResults()
@@ -30,7 +30,7 @@ ElectionController->Database: saveApprovedElectionResults()
 activate Database
 ResultScreen->rejectElectionResults()
 else reject
-DepartmentHead->ResultScreen : rejectElectionResults()
+DepartmentHead->ResultScreen : rejects election results
 ResultScreen->ElectionController : rejectElectionResults()
 ElectionController->Database: saveRejectedElectionResults()
 ElectionController->AnnouncementController: announceRejectedElectionResults()

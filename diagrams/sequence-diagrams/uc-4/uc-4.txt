@@ -1,14 +1,19 @@
 title Vote For Faculty Representative
 
-actor DepartmentRepresentative
+actor Student
 participant VoteScreen
+participant VoterController
+participant Voter
 participant ElectionController
 participant Database
 participant DisplayController
 
 autoactivation on
-DepartmentRepresentative->VoteScreen: castVote()
-VoteScreen->ElectionController: sendVote()
+Student->VoteScreen: clicks vote button
+VoteScreen->VoterController: sendVote()
+VoterController->Voter: isVote()
+VoterController<--Voter: false
+VoterController->ElectionController: sendVote()
 ElectionController->Database: addVote()
 ElectionController<--Database: status
 autoactivation off
